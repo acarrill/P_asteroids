@@ -4,24 +4,25 @@
         <meta charset="utf-8">
         <title>Asteroids, the game</title>
         <style>
+        body {
+          background-image: url("space_fondo.jpg");
+        }
             canvas {
                 border:1px solid #d3d3d3;
                 background-image: url("space.jpg");
-                width: 1050px;
                 border: 15px solid #444;
-                height: 500px;
                 margin: 0px auto;
                 margin-top: 20px;
                 margin-left: 70px;
+                margin-bottom: 20px;
             }
         </style>
     </head>
     <body onload="startGame()">
-        <canvas id="game">
+        <canvas id="game" width= 1125px height= 580px;>
         Please use a browser that supports "canvas"
         </canvas>
 
         <script type="text/javascript" src=asteroids.js></script>
-        <image src="nave.png"></image>
   </body>
 </html>
