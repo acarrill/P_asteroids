@@ -16,7 +16,7 @@ function startGame() {
 
     explosion.src = "explosionLarge.png";
     if (soundtrack == undefined){
-        soundtrack = new sound("soundtrack.mp3");
+        soundtrack = new Sound("soundtrack.mp3");
         soundtrack.play();
     }
 
@@ -44,8 +44,7 @@ var gameArea = {
     start: function() {
         this.ctx = this.canvas.getContext('2d');
         window.addEventListener("keydown", keyHandler, false);
-        //window.addEventListener("keyup", keyHandlerOff, false); inercia
-        this.updateInterval = setInterval(updateGame, 20);
+        this.updateInterval = setInterval(updateGame, 17);
         this.asteroidsInterval = setInterval(spawnAsteroids, 1000);
     },
     clear: function() {
@@ -97,13 +96,12 @@ function spawnAsteroids() {
         var index = asteroids.length;
         asteroids[index] = new DynamicElemt(60, 60, x, y);
         asteroids[index].gameElement.src = "asteroidLarge.png";
-        asteroids[index].speed = 3.5;
+        asteroids[index].speed =  Math.floor((Math.random() * 4.5) + 2.5)
         asteroids[index].moveAngle = 0.5;
         asteroids[index].move = function() { // Exclusivo de cada componente
             //Control velocidad y ángulo
             angularControl(this);
-            //Control movimiento a traves de margenes
-            //marginControl(this);
+
         }
     }
 }
@@ -123,16 +121,6 @@ function acelerationControl(obj) { //Control de aceleración para la nave
     if (obj.speed <= obj.minSpeed){
         obj.speed = obj.minSpeed;
     }
-    /*
-        Usar en caso de querer eliminar inercia espacial
-
-    if (obj.deceleration != 0 && obj.speed <= 0){ //fricción debe parar, pero no mover hacia atrás
-        obj.deceleration = 0;
-        obj.speed = 0;
-    } else if (obj.deceleration < 0) {
-        obj.speed += obj.deceleration;
-    }
-    */
 }
 
 function marginControl (obj) {
@@ -151,23 +139,6 @@ function marginControl (obj) {
 
     //LAS SIGUIENTE FUNCIONES MANEJAN LAS FLECHAS DEL TECLADO (NAVE)
 
-/*
-    Esta función se utilizaría en caso de querer eliminar la inercia espacial
-
-function keyHandlerOff(event) {
-
-    if (event.key == "ArrowUp"){
-        player.deceleration = -0.08
-        player.acceleration = 0;
-    } else if (event.key == "ArrowDown"){
-        player.deceleration = 0.6
-        player.acceleration = 0;
-    }else if (event.key == "ArrowLeft" || event.key == "ArrowRight"){
-        player.moveAngle = 0;
-    }
-}
-*/
-
 function keyHandler(event) {
 
     switch(event.key) {
@@ -185,7 +156,7 @@ function keyHandler(event) {
             break;
         case " ":
             spawnBullet();
-            var laser = new sound("laser.mp3")
+            var laser = new Sound("laser.mp3")
             laser.play();
             break;
         default:
@@ -204,8 +175,8 @@ function DynamicElemt(width, height, x , y) {
     this.y = y;
     this.acceleration = 0;
     this.speed = 0;
-    this.maxSpeed = 6.5;
-    this.minSpeed = -6.5;
+    this.maxSpeed = 6;
+    this.minSpeed = -6;
     this.angle = 0;
     this.moveAngle = 0;
     this.update = function() {
@@ -230,18 +201,18 @@ function TextComponent(size, font, x , y, color) {
     }
 }
 
-function sound(src) {
-    this.sound = document.createElement("audio");
-    this.sound.src = src;
-    this.sound.setAttribute("preload", "auto");
-    this.sound.setAttribute("controls", "none");
-    this.sound.style.display = "none";
-    document.body.appendChild(this.sound);
+function Sound(src) {
+    this.Sound = document.createElement("audio");
+    this.Sound.src = src;
+    this.Sound.setAttribute("preload", "auto");
+    this.Sound.setAttribute("controls", "none");
+    this.Sound.style.display = "none";
+    document.body.appendChild(this.Sound);
     this.play = function(){
-        this.sound.play();
+        this.Sound.play();
     }
     this.stop = function(){
-        this.sound.pause();
+        this.Sound.pause();
     }
 }
 
@@ -249,13 +220,13 @@ function sound(src) {
 
 function crash(whoCrash, theCrashed) {
     var myleft = whoCrash.x;
-    var myright = whoCrash.x + (whoCrash.width);
+    var myright = whoCrash.x + (whoCrash.width/1.35);
     var mytop = whoCrash.y;
-    var mybottom = whoCrash.y + (whoCrash.height);
+    var mybottom = whoCrash.y + (whoCrash.height/1.35);
     var otherleft = theCrashed.x;
-    var otherright = theCrashed.x + (theCrashed.width);
+    var otherright = theCrashed.x + (theCrashed.width/1.35);
     var othertop = theCrashed.y;
-    var otherbottom = theCrashed.y + (theCrashed.height);
+    var otherbottom = theCrashed.y + (theCrashed.height/1.35);
     var crash = true;
     if ((mybottom < othertop) ||
            (mytop > otherbottom) ||
@@ -283,7 +254,7 @@ function updateGame () {
             if (shooted) {
                 bullets.splice(i, 1);
                 gameArea.ctx.drawImage(explosion, asteroids[j].x, asteroids[j].y, 115, 115);
-                asteroid_boom = new sound("asteroid_boom.mp3"); // sonido explosion
+                asteroid_boom = new Sound("asteroid_boom.mp3"); // sonido explosion
                 asteroid_boom.play();
                 score.count += 20;
                 asteroids.splice(j, 1)
